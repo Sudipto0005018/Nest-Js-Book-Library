@@ -22,8 +22,24 @@ let BookService = class BookService {
     constructor(bookModel) {
         this.bookModel = bookModel;
     }
-    async findAll() {
-        return await this.bookModel.find().exec();
+    async findAll(query) {
+        console.log(query);
+        const resPerPage = 2;
+        const currentPage = Number(query.page) || 1;
+        const skip = resPerPage * (currentPage - 1);
+        const keyword = query.keyword
+            ? {
+                title: {
+                    $regex: query.keyword,
+                    $options: 'i',
+                },
+            }
+            : {};
+        return await this.bookModel
+            .find({ ...keyword })
+            .limit(resPerPage)
+            .skip(skip)
+            .exec();
     }
     async create(book) {
         return await this.bookModel.create(book);
