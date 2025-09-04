@@ -74,8 +74,9 @@ let BookService = class BookService {
             .skip(skip)
             .exec();
     }
-    async create(book) {
-        return await this.bookModel.create(book);
+    async create(book, user) {
+        const data = Object.assign(book, { user: user._id });
+        return await this.bookModel.create(data);
     }
     async findById(id) {
         const isValidId = mongoose_2.default.isValidObjectId(id);

@@ -11,6 +11,7 @@ import mongoose, { Model } from 'mongoose';
 import { Book } from './schemas/book.schema';
 
 import { Query } from 'express-serve-static-core';
+import { User } from '../auth/schemas/user.schema';
 @Injectable()
 export class BookService {
   constructor(
@@ -40,8 +41,10 @@ export class BookService {
       .exec();
   }
 
-  async create(book: Book): Promise<Book> {
-    return await this.bookModel.create(book);
+  async create(book: Book, user: User): Promise<Book> {
+
+    const data = Object.assign(book, {user: user._id})
+    return await this.bookModel.create(data);
   }
 
   async findById(id: string): Promise<Book> {

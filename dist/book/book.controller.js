@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const book_service_1 = require("./book.service");
 const create_book_dto_1 = require("./dto/create-book.dto");
 const update_book_dto_1 = require("./dto/update-book.dto");
+const passport_1 = require("@nestjs/passport");
 let BookController = class BookController {
     bookservice;
     constructor(bookservice) {
@@ -25,8 +26,9 @@ let BookController = class BookController {
     async getAllBooks(query) {
         return this.bookservice.findAll(query);
     }
-    async createBook(book) {
-        return this.bookservice.create(book);
+    async createBook(book, req) {
+        console.log(req.user);
+        return this.bookservice.create(book, req.user);
     }
     async getBook(id) {
         return this.bookservice.findById(id);
@@ -48,9 +50,11 @@ __decorate([
 ], BookController.prototype, "getAllBooks", null);
 __decorate([
     (0, common_1.Post)('new'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_book_dto_1.CreateBookDto]),
+    __metadata("design:paramtypes", [create_book_dto_1.CreateBookDto, Object]),
     __metadata("design:returntype", Promise)
 ], BookController.prototype, "createBook", null);
 __decorate([
