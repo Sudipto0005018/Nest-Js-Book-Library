@@ -1,11 +1,13 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { Role } from '../enums/role.enum';
 
 @Schema({
   timestamps: true,
 })
-export class User extends Document{
+export class User extends Document {
   @Prop()
   name: string;
 
@@ -14,6 +16,12 @@ export class User extends Document{
 
   @Prop()
   password: string;
+
+  @Prop({
+    type: [{ type: String, enum: Role }],
+    default: [Role.User],
+  })
+  role: Role[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

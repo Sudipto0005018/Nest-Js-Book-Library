@@ -61,12 +61,13 @@ let AuthService = class AuthService {
     }
     async signUp(signUpDto) {
         try {
-            const { name, email, password } = signUpDto;
+            const { name, email, password, role } = signUpDto;
             const hashedPassword = await bcrypt.hash(password, 10);
             const user = await this.userModel.create({
                 name,
                 email,
                 password: hashedPassword,
+                role
             });
             const token = this.jwtService.sign({ id: user._id });
             console.log('signUpToken is=>', token);

@@ -12,10 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserSchema = exports.User = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
+const role_enum_1 = require("../enums/role.enum");
 let User = class User extends mongoose_2.Document {
     name;
     email;
     password;
+    role;
 };
 exports.User = User;
 __decorate([
@@ -30,6 +32,13 @@ __decorate([
     (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        type: [{ type: String, enum: role_enum_1.Role }],
+        default: [role_enum_1.Role.User],
+    }),
+    __metadata("design:type", Array)
+], User.prototype, "role", void 0);
 exports.User = User = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
