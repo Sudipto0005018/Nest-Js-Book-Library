@@ -11,4 +11,12 @@ export declare class BookController {
     getBook(id: string): Promise<Book | null>;
     updateBook(id: string, book: UpdateBookDto): Promise<Book | null>;
     deleteBook(id: string): Promise<Book | null>;
+    uploadImages(id: string, files: Array<Express.Multer.File>): Promise<{
+        message: string;
+        book: import("mongoose").Document<unknown, {}, Book, {}, {}> & Book & {
+            _id: import("mongoose").Types.ObjectId;
+        } & {
+            __v: number;
+        };
+    }>;
 }

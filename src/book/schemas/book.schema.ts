@@ -29,5 +29,21 @@ export class Book {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   user: User;
+
+@Prop([
+    {
+      filename: String,
+      path: String,
+      mimetype: String,
+      size: Number,
+    },
+],
+)
+  images: {
+    filename: string;
+    path: string;
+    mimetype: string;
+    size: number;
+  }[];
 }
 export const BookSchema = SchemaFactory.createForClass(Book);

@@ -98,6 +98,13 @@ let BookService = class BookService {
     async deleteById(id) {
         return await this.bookModel.findByIdAndDelete(id);
     }
+    async addImages(id, images) {
+        const updatedBook = await this.bookModel.findByIdAndUpdate(id, { $push: { images: { $each: images } } }, { new: true });
+        if (!updatedBook) {
+            throw new common_1.BadRequestException('Book not found');
+        }
+        return updatedBook;
+    }
 };
 exports.BookService = BookService;
 exports.BookService = BookService = __decorate([

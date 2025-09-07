@@ -11,14 +11,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateBookDto = void 0;
 const class_validator_1 = require("class-validator");
+const class_transformer_1 = require("class-transformer");
 const book_schema_1 = require("../schemas/book.schema");
 const user_schema_1 = require("../../auth/schemas/user.schema");
+class ImageDto {
+    filename;
+    path;
+    mimetype;
+    size;
+}
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ImageDto.prototype, "filename", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ImageDto.prototype, "path", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], ImageDto.prototype, "mimetype", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], ImageDto.prototype, "size", void 0);
 class CreateBookDto {
     title;
     description;
     author;
     price;
     category;
+    images;
     user;
 }
 exports.CreateBookDto = CreateBookDto;
@@ -47,6 +71,13 @@ __decorate([
     (0, class_validator_1.IsEnum)(book_schema_1.Category, { message: 'Please enter correct Category.' }),
     __metadata("design:type", String)
 ], CreateBookDto.prototype, "category", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.ValidateNested)({ each: true }),
+    (0, class_transformer_1.Type)(() => ImageDto),
+    __metadata("design:type", Array)
+], CreateBookDto.prototype, "images", void 0);
 __decorate([
     (0, class_validator_1.IsEmpty)({ message: 'You cannot pass userId' }),
     __metadata("design:type", user_schema_1.User)

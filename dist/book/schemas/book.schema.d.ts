@@ -13,6 +13,12 @@ export declare class Book {
     price: number;
     category: Category;
     user: User;
+    images: {
+        filename: string;
+        path: string;
+        mimetype: string;
+        size: number;
+    }[];
 }
 export declare const BookSchema: mongoose.Schema<Book, mongoose.Model<Book, any, any, any, mongoose.Document<unknown, any, Book, any, {}> & Book & {
     _id: mongoose.Types.ObjectId;

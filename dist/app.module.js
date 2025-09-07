@@ -14,12 +14,19 @@ const book_module_1 = require("./book/book.module");
 const config_1 = require("@nestjs/config");
 const mongoose_1 = require("@nestjs/mongoose");
 const auth_module_1 = require("./auth/auth.module");
+const throttler_1 = require("@nestjs/throttler");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            throttler_1.ThrottlerModule.forRoot([
+                {
+                    ttl: 5 * 1000,
+                    limit: 3,
+                },
+            ]),
             config_1.ConfigModule.forRoot({
                 envFilePath: '.env',
                 isGlobal: true,

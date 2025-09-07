@@ -13,6 +13,8 @@ const book_service_1 = require("./book.service");
 const mongoose_1 = require("@nestjs/mongoose");
 const book_schema_1 = require("./schemas/book.schema");
 const auth_module_1 = require("../auth/auth.module");
+const core_1 = require("@nestjs/core");
+const throttler_1 = require("@nestjs/throttler");
 let BookModule = class BookModule {
 };
 exports.BookModule = BookModule;
@@ -23,7 +25,13 @@ exports.BookModule = BookModule = __decorate([
             mongoose_1.MongooseModule.forFeature([{ name: book_schema_1.Book.name, schema: book_schema_1.BookSchema }]),
         ],
         controllers: [book_controller_1.BookController],
-        providers: [book_service_1.BookService],
+        providers: [
+            book_service_1.BookService,
+            {
+                provide: core_1.APP_GUARD,
+                useClass: throttler_1.ThrottlerGuard,
+            },
+        ],
     })
 ], BookModule);
 //# sourceMappingURL=book.module.js.map

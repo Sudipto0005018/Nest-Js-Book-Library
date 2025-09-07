@@ -12,6 +12,8 @@ import { Book } from './schemas/book.schema';
 
 import { Query } from 'express-serve-static-core';
 import { User } from '../auth/schemas/user.schema';
+import { CreateBookDto } from './dto/create-book.dto';
+import { UpdateBookDto } from './dto/update-book.dto';
 @Injectable()
 export class BookService {
   constructor(
@@ -41,9 +43,8 @@ export class BookService {
       .exec();
   }
 
-  async create(book: Book, user: User): Promise<Book> {
-
-    const data = Object.assign(book, {user: user._id})
+  async create(book: CreateBookDto, user: User): Promise<Book> {
+    const data = Object.assign(book, { user: user._id });
     return await this.bookModel.create(data);
   }
 
@@ -63,7 +64,7 @@ export class BookService {
     return book;
   }
 
-  async updateById(id: string, book: Book): Promise<Book | null> {
+  async updateById(id: string, book: UpdateBookDto): Promise<Book | null> {
     return await this.bookModel.findByIdAndUpdate(id, book, {
       new: true,
       runValidators: true,
@@ -72,5 +73,19 @@ export class BookService {
 
   async deleteById(id: string): Promise<Book | null> {
     return await this.bookModel.findByIdAndDelete(id);
+  }
+
+  async addImages(id: string, images: any[]) {
+    const updatedBook = await this.bookModel.findByIdAndUpdate(
+      id,
+      { $push: { images: { $each: images } } },
+      { new: true },
+    );
+
+    if (!updatedBook) {
+      throw new BadRequestException('Book not found');
+    }
+
+    return updatedBook;
   }
 }
