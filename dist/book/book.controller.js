@@ -45,15 +45,9 @@ let BookController = class BookController {
         return this.bookservice.deleteById(id);
     }
     async uploadImages(id, files) {
-        const images = files.map((file) => ({
-            filename: file.filename,
-            path: file.path,
-            mimetype: file.mimetype,
-            size: file.size,
-        }));
-        const updatedBook = await this.bookservice.addImages(id, images);
+        const updatedBook = await this.bookservice.addImages(id, files);
         return {
-            message: 'Files uploaded and saved in DB successfully',
+            message: 'Files uploaded to Cloudinary & saved in DB successfully',
             book: updatedBook,
         };
     }

@@ -52,8 +52,10 @@ const mongoose_2 = __importStar(require("mongoose"));
 const book_schema_1 = require("./schemas/book.schema");
 let BookService = class BookService {
     bookModel;
-    constructor(bookModel) {
+    cloudinary;
+    constructor(bookModel, cloudinary) {
         this.bookModel = bookModel;
+        this.cloudinary = cloudinary;
     }
     async findAll(query) {
         console.log(query);
@@ -98,11 +100,23 @@ let BookService = class BookService {
     async deleteById(id) {
         return await this.bookModel.findByIdAndDelete(id);
     }
-    async addImages(id, images) {
+    async addImages(id, files) {
+        if (!mongoose_2.default.isValidObjectId(id))
+            throw new common_1.BadRequestException('Invalid book id');
+        const uploadPromises = files.map((file) => this.cloudinary.uploader.upload(file.path, {
+            folder: 'books',
+            resource_type: 'image',
+        }));
+        const uploadResults = await Promise.all(uploadPromises);
+        const images = uploadResults.map((res) => ({
+            filename: res.original_filename,
+            path: res.secure_url,
+            mimetype: res.format,
+            size: res.bytes,
+        }));
         const updatedBook = await this.bookModel.findByIdAndUpdate(id, { $push: { images: { $each: images } } }, { new: true });
-        if (!updatedBook) {
+        if (!updatedBook)
             throw new common_1.BadRequestException('Book not found');
-        }
         return updatedBook;
     }
 };
@@ -110,6 +124,7 @@ exports.BookService = BookService;
 exports.BookService = BookService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(book_schema_1.Book.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __param(1, (0, common_1.Inject)('CLOUDINARY')),
+    __metadata("design:paramtypes", [mongoose_2.Model, Object])
 ], BookService);
 //# sourceMappingURL=book.service.js.map
